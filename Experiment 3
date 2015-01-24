@@ -1,0 +1,58 @@
+/*
+Lab 3 - Epirement 3
+Mudassir Iqbal Mohammed 
+DIGF 2B03 Physical Computing S01
+OCAD University
+Created on [Jan 24 2015]
+Based on:
+Arduino Sketchbook Example : AnalogInput 
+                              Fade
+                              Calibration 
+                              map (arduino online) 
+*/
+const int lightSensorPin = A0; //est. int that wont change 
+const int ledPin = 13; 
+
+int sensorValue = 0; 
+int sensorMin = 1023;        // minimum sensor value
+int sensorMax = 0;           // maximum sensor value
+
+
+void setup() {
+  pinMode(ledPin, OUTPUT); 
+  
+   // calibrate during the first five seconds 
+  while (millis() < 5000) {
+    sensorValue = analogRead(lightSensorPin);
+
+    // record the maximum sensor value
+    if (sensorValue > sensorMax) {
+      sensorMax = sensorValue;
+    }
+
+    // record the minimum sensor value
+    if (sensorValue < sensorMin) {
+      sensorMin = sensorValue;
+    }
+  
+  }
+
+}
+void loop() {
+  
+  //map the light sensor values to the LED 
+  map(sensorValue , sensorMax, sensorMin, 0, 255); 
+   // read the value from the sensor:
+  sensorValue = analogRead(lightSensorPin);    
+  // turn the ledPin on
+  digitalWrite(ledPin, HIGH);  
+  // stop the program for <sensorValue> milliseconds:
+  delay(sensorValue);          
+  // turn the ledPin off:        
+  digitalWrite(ledPin, LOW);   
+  // stop the program for for <sensorValue> milliseconds:
+  delay(sensorValue);   
+  
+  sensorValue = constrain(sensorValue, 0, 255);
+  analogWrite(ledPin, sensorValue);
+}
